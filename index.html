@@ -1,0 +1,306 @@
+<!doctype html>
+<html>  
+	<head>    
+		<meta charset="UTF-8" />    
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />    
+		
+		<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>  
+		<style type="text/tailwindcss">
+			@theme {        
+				--color-mem-50: #e8f7fc;
+				--color-mem-100: #d1f0fa;
+				--color-mem-200: #a3e1f5;
+				--color-mem-300: #75d1f0;
+				--color-mem-400: #46c2ec;
+				--color-mem-450: #5ecbee;
+				--color-mem-500: #18b3e7;
+				--color-mem-600: #138fb9;
+				--color-mem-700: #0f6b8a;
+				--color-mem-800: #0a485c;
+				--color-mem-900: #05242e;			
+			}    
+		</style>
+		
+	  </script>
+	  
+		<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	</head>  
+	<body>    
+		<div class="bg-gray-100 text-gray-700" id="app">
+
+			<!-- Fixed Header Section with Logo and Buttons -->
+			<header :class="{ 'scrolled, shadow-md': isScrolled }"
+			  class="bg-white fixed w-full top-0 left-0 z-50 transition-all duration-300">
+			  <div class="container mx-auto px-4 py-2 flex items-center justify-between">
+
+				<!-- Logo -->
+				<div class="flex flex-col items-center">
+				  <img class="h-10" :class="{ 'h-8': isScrolled, 'transition-all': true }" src="./img/memories.svg" alt="Your Company" />
+				  <p class="text-cyan-700 font-light text-lg space-x-1" :class="{ 'text-sm': isScrolled }">
+					<span class="font-mono">Biograph</span>
+					<span class="font-bold">ME</span>
+				  </p>
+				</div>
+
+				<!-- Buttons -->
+				<div :class="{ 'space-x-8': isScrolled, 'space-x-4': !isScrolled }" class="transition-all">
+				  <a href="/login"
+					class="px-4 py-2 border border-mem-400 text-mem-400 font-semibold rounded-lg shadow-md hover:bg-mem-400 hover:text-white transition focus:outline-none focus:ring-4 focus:ring-mem-300">
+					Se connecter
+				  </a>
+				  <a href="/register"
+					class="px-4 py-2 bg-mem-400 text-white font-semibold rounded-lg shadow-md hover:bg-mem-600 transition focus:outline-none focus:ring-4 focus:ring-mem-300">
+					Créer un compte
+				  </a>
+				</div>
+			  </div>
+			</header>
+
+			<!-- Hero Section with Split Layout -->
+			<section class="relative mt-20 bg-white">
+			  <div class="container mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-2 items-center">
+				<!-- Left Text Content -->
+				<div class="text-center lg:text-left py-12 lg:py-24">
+				  <h1 class="text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">Préservez vos souvenirs, honorez vos
+					histoires.
+				  </h1>
+				  <p class="text-lg text-gray-600 mb-6 max-w-md mx-auto lg:mx-0">
+					Créez un espace unique pour raconter votre histoire et celles de vos proches, à travers des photos, des
+					vidéos, et bien plus.
+				  </p>
+				  <a href="/register"
+					class="px-6 py-3 bg-mem-400 text-white font-semibold rounded-lg shadow-lg hover:bg-mem-600 transition focus:outline-none focus:ring-4 focus:ring-mem-300">
+					Commencez votre histoire maintenant
+				  </a>
+				</div>
+
+				<!-- Right Image -->
+				<div class="relative">
+				  <!-- img src="./img/pexels-leah-newhouse-50725-185933.jpg" alt="Memories Hero" class="w-full h-full object-cover rounded-lg shadow-md" -->
+				  <img src="./img/cooking.png" alt="Hero" class="w-full h-full object-cover rounded-lg shadow-md">
+				</div>
+			  </div>
+			</section>
+
+			<!-- Scroll Arrow -->
+			<div v-if="!isScrolled" class="scroll-arrow">
+			  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-900" fill="none" viewBox="0 0 24 24"
+				stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+			  </svg>
+			</div>
+
+			<!-- Engagement Emotional Section -->
+			<section class="bg-white py-20">
+			  <div class="container mx-auto px-4 text-center">
+				<h2 class="text-4xl font-extrabold mb-8">Vos souvenirs sont importants</h2>
+				<p class="text-lg text-gray-700">
+				  Avec le temps, les souvenirs s’effacent et les histoires se perdent.
+				  Pourtant, chaque moment vécu est une pièce unique de votre histoire, de votre héritage.
+				</p>
+				<p class="text-lg text-gray-700 pt-4">
+				  <span class="text-mem-400 font-semibold">"{{ appName }}"</span> est là pour vous aider à préserver ces instants précieux,
+				  pour qu’ils puissent être partagés avec les générations futures et rester vivants dans les cœurs de vos proches.</p>
+			  </div>
+			</section>
+
+			<!-- Why Section -->
+			<section class="bg-gray-50 py-20">
+			  <div class="container mx-auto px-4 text-center">
+				<h2 class="text-4xl font-extrabold mb-8">
+				  Pourquoi choisir "{{ appName }}" ?
+				</h2>
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				  <div class="transform hover:scale-105 transition duration-300">
+					<img src="./img/undraw_under_construction.svg" alt="Personnalisation complète"
+					  class="w-full h-48 rounded-lg mb-4">
+					<h3 class="font-semibold text-lg mb-2">Personnalisation complète</h3>
+					<p class="text-gray-600">Ajoutez des photos <span class="text-xl">&#128247</span>, des vidéos <span
+						class="text-xl">&#127902</span>, des textes <span class="text-xl">&#128221</span> et des sons <span
+						class="text-xl">&#127908</span> pour immortaliser vos souvenirs.</p>
+				  </div>
+				  <div class="transform hover:scale-105 transition duration-300">
+					<img src="./img/undraw_true_friends.svg" alt="Partage sécurisé" class="w-full h-48  rounded-lg mb-4">
+					<h3 class="font-semibold text-lg mb-2">Partage sécurisé</h3>
+					<p class="text-gray-600">Partagez vos récits avec votre famille et vos amis dans un espace privé et
+					  sécurisé. <span class="text-xl">&#128272</span>
+					</p>
+				  </div>
+				  <div class="transform hover:scale-105 transition duration-300">
+					<img src="./img/undraw_missed_chances.svg" alt="Accessible à tout moment"
+					  class="w-full h-48 rounded-lg mb-4">
+					<h3 class="font-semibold text-lg mb-2">Accessible à tout moment</h3>
+					<p class="text-gray-600">Revenez à vos souvenirs quand vous le souhaitez, sur tous vos appareils. <span
+						class="text-xl">&#128187 &#128241</span></p>
+				  </div>
+				</div>
+			  </div>
+			</section>
+
+			<!-- Testimonials Section -->
+			<section class="bg-white py-20">
+			  <div class="container mx-auto px-4 text-center">
+				<h2 class="text-4xl font-extrabold mb-8">Ils ont immortalisé leurs souvenirs avec "{{ appName }}"</h2>
+				
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+				  <div
+					class="bg-gray-50 p-6 rounded-lg shadow-md text-center transform hover:scale-105 transition duration-300">
+					<img src="./img/grandma.png" alt="Marguerite H."
+					  class="w-20 h-20 rounded-full mx-auto mb-4 object-cover">
+					<p class="italic text-gray-600">"Grâce à <span class="text-mem-400 font-bold">{{ appName }}</span>, mes
+					  petits-enfants connaissent l’histoire de leur arrière-grand-mère."</p>
+					<p class="mt-6 font-semibold text-mem-400">– Marguerite H.</p>
+				  </div>
+				
+				<div
+					class="bg-gray-50 p-6 rounded-lg shadow-md text-center transform hover:scale-105 transition duration-300">
+					<img src="./img/man.jpg" alt="Aurélien D."
+					  class="w-20 h-20 rounded-full mx-auto mb-4 object-cover">
+					<p class="italic text-gray-600">"J’ai enfin pu organiser toutes mes étapes de vie au même endroit."</p>
+					<p class="mt-6 font-semibold text-mem-400">– Aurélien D.</p>
+				  </div>
+				  <div
+					class="bg-gray-50 p-6 rounded-lg shadow-md text-center transform hover:scale-105 transition duration-300">
+					<img src="./img/femme.jpg" alt="Isabelle R."
+					  class="w-20 h-20 rounded-full mx-auto mb-4 object-cover">
+					<p class="italic text-gray-600">"Un outil puissant pour garder mes souvenirs vivants pour les générations
+					  futures."</p>
+					<p class="mt-6 font-semibold text-mem-400">– Isabelle R.</p>
+				  </div>
+				</div>
+			  </div>
+			</section>
+
+			<!-- Call to Action Section -->
+			<section id="cta" class="bg-gradient-to-r from-mem-400 to-mem-600 text-white py-20">
+			  <div class="container mx-auto px-4 text-center">
+				<h2 class="text-4xl font-extrabold mb-4 text-white">Ne laissez pas vos histoires s’effacer avec le temps.</h2>
+				
+				<p class="text-lg mb-8">Créez votre compte gratuitement dès aujourd'hui et commencez à raconter votre histoire.</p>
+				<a href="/register"
+				  class="px-8 py-4 bg-white text-mem-400 font-semibold rounded-lg shadow-lg hover:bg-gray-100 transition focus:outline-none focus:ring-4 focus:ring-white flex items-center justify-center">
+				  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+					stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+				  </svg>
+				  Créez votre compte gratuitement
+				</a>
+			  </div>
+			</section>
+
+			<!-- Footer -->
+			<footer class="bg-gray-900 text-white py-8">
+			  <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+				<p class="text-center md:text-left mb-4 md:mb-0">&copy; 2025 {{ appName }}. Tous droits réservés.</p>
+				<div class="flex space-x-4">
+				  <a href="#" class="text-mem-400 hover:underline">À propos</a>
+				  <a href="#" class="text-mem-400 hover:underline">Blog</a>
+				  <a href="#" class="text-mem-400 hover:underline">Contact</a>
+				</div>
+			  </div>
+			</footer>
+		  </div>
+		  
+		  
+		  <script>
+	
+		const { createApp, ref, onMounted, onUnmounted } = Vue
+
+		createApp({
+		  setup() {
+			const appName = ref('BiographME');
+			const isScrolled = ref(false);
+
+			const handleScroll = () => {
+			  isScrolled.value = window.scrollY > 5; // Set scroll threshold
+			}
+
+			// Attache l'écouteur au montage
+			onMounted(() => {
+			  window.addEventListener('scroll', handleScroll);
+			});
+
+			// Détache l'écouteur avant la destruction
+			onUnmounted(() => {
+			  window.removeEventListener('scroll', handleScroll);
+			});
+
+			return {
+			  appName,
+			  isScrolled // Inclure `isScrolled` si nécessaire dans la vue
+			};
+		  }
+		}).mount('#app');
+		</script>
+
+<style scoped>
+header {
+  padding: 8px 0;
+  /* Set initial smaller height */
+}
+
+header.scrolled {
+  padding: 4px 0;
+  /* Even smaller height when scrolled */
+
+}
+
+header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header .container img {
+  transition: all 0.3s ease;
+}
+
+header .container a {
+  transition: all 0.3s ease;
+}
+
+header .container .space-x-8 {
+  margin-left: 20px;
+  /* Adjust spacing for larger screens */
+}
+
+header .container .space-x-4 {
+  margin-left: 12px;
+  /* Adjusted smaller spacing when scrolled */
+}
+
+/* Ensure logo shrinks smoothly */
+header .container img.w-16 {
+  width: 64px;
+  /* Adjusted width */
+  height: 32px;
+  /* Adjusted height */
+}
+
+.scroll-arrow {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  transition: opacity 0.3s ease;
+}
+
+.scroll-arrow svg {
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(10px);
+  }
+}
+</style>
+	</body>
+</html>
