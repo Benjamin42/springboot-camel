@@ -1,0 +1,204 @@
+<!doctype html>
+<html>  
+	<head>    
+		<meta charset="UTF-8" />    
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />    
+		
+		<script src="https://unpkg.com/vue@latest"></script>
+		<script src="https://unpkg.com/@vuepic/vue-datepicker@latest"></script>
+		<link rel="stylesheet" href="https://unpkg.com/@vuepic/vue-datepicker@latest/dist/main.css">
+		
+		<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>  
+	  		
+
+	</head>  
+	<body class="bg-gray-100 text-gray-700">    
+		<div  id="app">
+
+
+			<div class="ml-2 md:ml-10 pt-5" v-if="form">
+				<p>minDate : {{ minDate }}</p>
+				<p>maxDate : {{ maxDate }}</p>
+
+				<label v-if="form.type == 'RANGE' || form.type == 'RANGE_OPEN'"
+					class="block text-sm md:text-base font-semibold leading-6">Date de début</label>
+				<label v-else class="block text-sm md:text-base font-semibold leading-6">Date</label>
+
+				<div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-5">
+
+					<!-- Start : year -->
+					<div class="w-48">
+						<vue-date-picker v-model="startYearProxy" year-picker :min-date="minDate"
+							:teleport="true" auto-apply
+							:year-range="[minDate.getFullYear(), maxDate.getFullYear()]"
+							placeholder="Année" />
+					</div>
+
+					<!-- Start : month -->
+					<div class="w-48">
+						<vue-date-picker v-if="form.start.year" v-model="startMonthProxy" month-picker
+							:min-date="minDate" :max-date="maxDate" auto-apply format="MMMM" locale="fr"
+							:teleport="true" :start-date="new Date(form.start.year, 0)"
+							placeholder="Mois (optionnel)" />
+					</div>
+
+					<!-- Start : day -->
+					<div class="w-48">
+						<vue-date-picker v-if="form.start.month" v-model="startDayProxy" day-picker
+							auto-apply format="dd" disable-month-year-select :min-date="minDate" :max-date="maxDate"
+							:start-date="new Date(form.start.year, form.start.month - 1)"
+							:teleport="true" :enable-time-picker="false"
+							placeholder="Jour (optionnel)" />
+					</div>
+
+				</div>
+			</div>
+		  
+		  
+		</div>
+
+
+		<script>
+			const { createApp, ref, onMounted, onUnmounted, computed } = Vue
+
+			const app = createApp({
+			  
+			  setup() {
+				const appName = ref('BiographME');
+
+				const storyParent = {
+					start: {
+						year: 1992,
+						month: 5,
+						day: 14
+					},
+					end: {
+						year: 1995,
+						month: 4
+					}
+				};
+				const story = null;
+				const category = null;
+
+				const form = ref(null)
+
+				const maxDate = ref(null)
+				const minDate = ref(null)
+
+				onMounted(() => {
+					init()
+				})
+
+				function init() {
+					// Start list values
+					minDate.value = storyParent ? constructDateWithPartial(storyParent.start, true) : new Date("1983-04-27");
+					maxDate.value = storyParent && storyParent?.end?.year ? constructDateWithPartial(storyParent.end, false) : new Date();
+
+
+					initForm(story)
+				}
+
+				function constructDateWithPartial(partialDate, start) {
+					var currentDate = new Date();
+					var year = partialDate?.year ? partialDate.year : currentDate.getFullYear()
+					var month = partialDate?.month ? partialDate.month - (start ? 1 : 0) : start ? 0 : 11
+					var day = partialDate?.day ? partialDate.day : start ? 1 : 31
+
+					return new Date(year, month, day)
+				}
+
+
+				function initForm(story) {
+					var storyType = story ? story.type : 'RANGE'
+
+					var tmp = {
+						type: storyType == 'RANGE' && !story?.end?.year ? 'RANGE_OPEN' : storyType,
+						title: story ? story.title : '',
+						start: {
+							year: story?.start.year ? story.start.year : '',
+							month: story?.start.month ? story.start.month : '',
+							day: story?.start.day ? story.start.day : ''
+						},
+						end: {
+							year: story?.end?.year ? story.end.year : '',
+							month: story?.end?.month ? story.end.month : '',
+							day: story?.end?.day ? story.end.day : ''
+						}
+					}
+
+					if (story) {
+						tmp.category = story.category ? { uuid: story.category.uuid } : null
+					} else {
+						tmp.category = category ? { uuid: category.uuid } : null
+						tmp.parent = storyParent ? { uuid: storyParent.uuid } : null
+					}
+					form.value = tmp
+				}
+
+				// START YEAR
+				const startYearProxy = computed({
+					get() {
+						return form.value.start?.year ? form.value.start.year : null
+					},
+					set(val) {
+						form.value.start.year = val
+						form.value.start.month = null;
+						form.value.start.day = null;
+					}
+				});
+
+
+				// START MONTH
+				const startMonthProxy = computed({
+					get() {
+						return form.value.start?.month && form.value.start?.year ?
+							{
+								month: form.value.start.month - 1,
+								year: form.value.start.year
+							} : null
+					},
+					set(val) {
+						form.value.start.month = val?.month >= 0 ? val.month + 1 : null
+						form.value.start.day = null;
+					}
+				});
+
+				// START DAY
+				const startDayProxy = computed({
+					get() {
+						if (form.value.start?.year && form.value.start?.month >= 0 && form.value.start?.day) {
+							return new Date(form.value.start.year, form.value.start.month - 1, form.value.start.day);
+						}
+						return null;
+					},
+					set(val) {
+						if (val instanceof Date) {
+							form.value.start.day = val.getDate();
+						} else {
+							form.value.start.day = null;
+						}
+					}
+				});
+				
+
+				return {
+				  appName,
+				  form,
+				  maxDate,
+				  minDate,
+				  startYearProxy,
+				  startMonthProxy,
+				  startDayProxy,
+				};
+			  }
+			});
+			
+			app.component('VueDatePicker', VueDatePicker);
+			
+			const instance = app.mount('#app');
+			
+			console.log('Vue instance mounted:', instance);
+		</script>
+	</body>
+	
+</html>
